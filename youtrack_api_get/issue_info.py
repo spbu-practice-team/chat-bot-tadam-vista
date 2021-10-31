@@ -31,7 +31,19 @@ def get_priority(youtrack_domain, issue_name, token):
 
 
 def get_time_end(youtrack_domain, issue_name, token):
-    return get_custom_field(youtrack_domain, issue_name, time_end_id, token)
+    url = "https://" \
+          + youtrack_domain \
+          + ".myjetbrains.com/youtrack/api/issues/" \
+          + issue_name \
+          + "/customFields/" \
+          + time_end_id
+    headers = {'Authorization': 'Bearer ' + token}
+    params = {'fields': 'projectCustomField(field(name)),value(id)'}
+    response = httpx.get(url, headers=headers, params=params)
+    data = response.json()
+    name = data["projectCustomField"]["field"]["name"]
+    value = data["value"]["id"] if ("id" in data["value"]) else "has no"
+    return name + ": " + value
 
 
 def get_time_start(youtrack_domain, issue_name, token):
