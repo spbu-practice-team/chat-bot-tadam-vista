@@ -38,11 +38,11 @@ def get_time_end(youtrack_domain, issue_name, token):
           + "/customFields/" \
           + time_end_id
     headers = {'Authorization': 'Bearer ' + token}
-    params = {'fields': 'projectCustomField(field(name)),value(id)'}
+    params = {'fields': 'projectCustomField(field(name)),value(presentation)'}
     response = httpx.get(url, headers=headers, params=params)
     data = response.json()
     name = data["projectCustomField"]["field"]["name"]
-    value = data["value"]["id"] if ("id" in data["value"]) else "has no"
+    value = data["value"]["presentation"] if ("presentation" in data["value"]) else "has no"
     return name + ": " + value
 
 
