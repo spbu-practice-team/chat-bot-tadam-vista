@@ -24,11 +24,11 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            return FieldInfo(None, None, False)
+            return None
         data = response.json()
         name = data["projectCustomField"]["field"]["name"]
         value = data["value"]["name"] if ("name" in data["value"]) else None
-        return FieldInfo(name, value)
+        return FieldInfo(name=name, value=value)
 
     def get_state(self):
         return self._get_custom_field(IssueManager.state_id)
@@ -45,11 +45,11 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            return FieldInfo(None, None, False)
+            None
         data = response.json()
         name = data["projectCustomField"]["field"]["name"]
         value = data["value"]["presentation"] if ("presentation" in data["value"]) else None
-        return FieldInfo(name, value)
+        return FieldInfo(name=name, value=value)
 
     def get_time_start(self):
         url = self.base_url
@@ -60,12 +60,12 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            return FieldInfo(None, None, False)
+            None
         data = response.json()
         name = "Created: "
         time = data["created"]
         value = datetime.datetime.fromtimestamp(time // 1000.0)
-        return FieldInfo(name, value)
+        return FieldInfo(name=name, value=value)
 
     def update_priority(self, priority):
         url = f"{self.base_url}/customFields/{IssueManager.priority_id}"
@@ -88,11 +88,11 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            return FieldInfo(None, None, False)
+            None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
         value = response_data["value"]["name"] if ("name" in response_data["value"]) else None
-        return FieldInfo(name, value)
+        return FieldInfo(name=name, value=value)
 
     def update_time_end(self, time):
         url = f"{self.base_url}/customFields/{IssueManager.time_end_id}"
@@ -115,8 +115,8 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            return FieldInfo(None, None, False)
+            None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
         value = response_data["value"]["presentation"] if ("presentation" in response_data["value"]) else None
-        return FieldInfo(name, value)
+        return FieldInfo(name=name, value=value)
