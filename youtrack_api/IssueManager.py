@@ -45,7 +45,7 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            None
+            return None
         data = response.json()
         name = data["projectCustomField"]["field"]["name"]
         value = data["value"]["presentation"] if ("presentation" in data["value"]) else None
@@ -60,7 +60,7 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            None
+            return None
         data = response.json()
         name = "Created: "
         time = data["created"]
@@ -88,7 +88,7 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            None
+            return None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
         value = response_data["value"]["name"] if ("name" in response_data["value"]) else None
@@ -115,7 +115,7 @@ class IssueManager:
             response.raise_for_status()
         except httpx.HTTPError as e:
             print(e)
-            None
+            return None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
         value = response_data["value"]["presentation"] if ("presentation" in response_data["value"]) else None
