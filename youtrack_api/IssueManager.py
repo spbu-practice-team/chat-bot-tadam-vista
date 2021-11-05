@@ -27,7 +27,7 @@ class IssueManager:
             return None
         data = response.json()
         name = data["projectCustomField"]["field"]["name"]
-        value = data["value"]["name"] if ("name" in data["value"]) else None
+        value = data["value"]["name"] if ((data["value"] is not None) and ("name" in data["value"])) else None
         return FieldInfo(name=name, value=value)
 
     def get_state(self):
@@ -48,7 +48,7 @@ class IssueManager:
             return None
         data = response.json()
         name = data["projectCustomField"]["field"]["name"]
-        value = data["value"]["presentation"] if ("presentation" in data["value"]) else None
+        value = data["value"]["presentation"] if ((data["value"] is not None) and ("presentation" in data["value"])) else None
         return FieldInfo(name=name, value=value)
 
     def get_time_start(self):
@@ -91,7 +91,7 @@ class IssueManager:
             return None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
-        value = response_data["value"]["name"] if ("name" in response_data["value"]) else None
+        value = response_data["value"]["name"] if ((response_data["value"] is not None) and ("name" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
 
     def update_time_end(self, time):
@@ -118,5 +118,5 @@ class IssueManager:
             return None
         response_data = response.json()
         name = response_data["projectCustomField"]["field"]["name"]
-        value = response_data["value"]["presentation"] if ("presentation" in response_data["value"]) else None
+        value = response_data["value"]["presentation"] if ((response_data["value"] is not None) and ("presentation" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
