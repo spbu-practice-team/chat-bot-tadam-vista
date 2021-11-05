@@ -25,9 +25,9 @@ class IssueManager:
         except httpx.HTTPError as e:
             print(e)
             return None
-        data = response.json()
-        name = data["projectCustomField"]["field"]["name"]
-        value = data["value"]["name"] if ((data["value"] is not None) and ("name" in data["value"])) else None
+        response_data = response.json()
+        name = response_data["projectCustomField"]["field"]["name"]
+        value = response_data["value"]["name"] if ((response_data["value"] is not None) and ("name" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
 
     def get_state(self):
@@ -46,9 +46,9 @@ class IssueManager:
         except httpx.HTTPError as e:
             print(e)
             return None
-        data = response.json()
-        name = data["projectCustomField"]["field"]["name"]
-        value = data["value"]["presentation"] if ((data["value"] is not None) and ("presentation" in data["value"])) else None
+        response_data = response.json()
+        name = response_data["projectCustomField"]["field"]["name"]
+        value = response_data["value"]["presentation"] if ((response_data["value"] is not None) and ("presentation" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
 
     def get_time_start(self):
@@ -61,9 +61,9 @@ class IssueManager:
         except httpx.HTTPError as e:
             print(e)
             return None
-        data = response.json()
+        response_data = response.json()
         name = "Created: "
-        time = data["created"]
+        time = response_data["created"]
         value = datetime.datetime.fromtimestamp(time // 1000.0)
         return FieldInfo(name=name, value=value)
 
