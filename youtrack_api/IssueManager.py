@@ -1,0 +1,133 @@
+import httpx
+import datetime
+import json
+
+
+class IssueManager:
+    state_id = "111-2"
+    priority_id = "111-0"
+    time_end_id = "117-0"
+
+    class FieldInfo:
+        def __init__(self, name, value, is_valid=True):
+            self.name = name    # always string
+            self.value = value  # not always string
+            self.is_valid = is_valid
+
+        def show(self):
+            if self.is_valid:
+                print(f"{self.name}: {self.value}")
+            else:
+                print("Not valid")
+
+    def __init__(self, issue_name, youtrack_domain, token):
+        self.issue_name = issue_name
+        self.youtrack_domain = youtrack_domain
+        self.token = token
+        self.base_url = f"https://{youtrack_domain}.myjetbrains.com/youtrack/api/issues/{issue_name}"
+
+    def _get_custom_field(self, field_id):
+        url = f"{self.base_url}/customFields/{field_id}"
+        headers = {'Authorization': f"Bearer {self.token}"}
+        params = {'fields': 'projectCustomField(field(name)),value(name)'}
+        response = httpx.get(url, headers=headers, params=params)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return IssueManager.FieldInfo(None, None, False)
+        data = response.json()
+        name = data["projectCustomField"]["field"]["name"]
+        value = data["value"]["name"] if ("name" in data["value"]) else None
+        return IssueManager.FieldInfo(name, value)
+
+    def get_state(self):
+        return self._get_custom_field(IssueManager.state_id)
+
+    def get_priority(self):
+        return self._get_custom_field(IssueManager.priority_id)
+
+    def get_time_end(self):
+        url = f"{self.base_url}/customFields/{IssueManager.time_end_id}"
+        headers = {'Authorization': f"Bearer {self.token}"}
+        params = {'fields': 'projectCustomField(field(name)),value(presentation)'}
+        response = httpx.get(url, headers=headers, params=params)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return IssueManager.FieldInfo(None, None, False)
+        data = response.json()
+        name = data["projectCustomField"]["field"]["name"]
+        value = data["value"]["presentation"] if ("presentation" in data["value"]) else None
+        return IssueManager.FieldInfo(name, value)
+
+    def get_time_start(self):
+        url = self.base_url
+        headers = {'Authorization': f"Bearer {self.token}"}
+        params = {'fields': 'created'}
+        response = httpx.get(url, headers=headers, params=params)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return IssueManager.FieldInfo(None, None, False)
+        data = response.json()
+        name = "Created: "
+        time = data["created"]
+        value = datetime.datetime.fromtimestamp(time // 1000.0)
+        return IssueManager.FieldInfo(name, value)
+
+    def update_priority(self, priority):
+        url = f"{self.base_url}/customFields/{IssueManager.priority_id}"
+        headers = {'Authorization': f"Bearer {self.token}",
+                   "Content-Type": "application/json"}
+        params = {'fields': 'projectCustomField(field(name)),value(name)'}
+        data = {
+            "projectCustomField": {
+                "field": {
+                    "name": "Priority"
+                }
+            },
+            "value": {
+                "name": priority  # Возможные значения приоритета: Show-stopper, Critical, Major, Normal, Minor
+            }
+        }
+        data = json.dumps(data, indent=4)
+        response = httpx.post(url, headers=headers, params=params, data=data)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return IssueManager.FieldInfo(None, None, False)
+        response_data = response.json()
+        name = response_data["projectCustomField"]["field"]["name"]
+        value = response_data["value"]["name"] if ("name" in response_data["value"]) else None
+        return IssueManager.FieldInfo(name, value)
+
+    def update_time_end(self, time):
+        url = f"{self.base_url}/customFields/{IssueManager.time_end_id}"
+        headers = {'Authorization': f"Bearer {self.token}",
+                   "Content-Type": "application/json"}
+        params = {'fields': 'projectCustomField(field(name)),value(presentation)'}
+        data = {
+            "projectCustomField": {
+                "field": {
+                    "name": "Оценка"
+                }
+            },
+            "value": {
+                "presentation": time  # Оценочное время в формате 1н 1д 1ч 1м
+            }
+        }
+        data = json.dumps(data, indent=4)
+        response = httpx.post(url, headers=headers, params=params, data=data)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return IssueManager.FieldInfo(None, None, False)
+        response_data = response.json()
+        name = response_data["projectCustomField"]["field"]["name"]
+        value = response_data["value"]["presentation"] if ("presentation" in response_data["value"]) else None
+        return IssueManager.FieldInfo(name, value)
