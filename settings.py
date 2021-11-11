@@ -9,5 +9,9 @@ class AppSettings(BaseSettings):
     PASSWORD: str
     SERVER: str
 
+    # YouTrack credentials
+    DOMAIN: str
+    TOKEN: str
+
     class Config:  # noqa: WPS431
         env_file = ".env"
