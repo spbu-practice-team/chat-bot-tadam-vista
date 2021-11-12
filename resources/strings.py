@@ -45,3 +45,6 @@ SUCCESSFUL_UPDATE_PRIORITY = "Приоритет {priority} для задачи 
 INPUT_PRIORITY_ERROR = f"Введите приоритет из предложенных ниже:\n{', '.join(POSSIBLE_PRIORITY)}"
 INPUT_END_DATETIME_ERROR = f"Введите оценочное время выполнения задачи как написано ниже:\n{INPUT_DATETIME_FORMAT}"
 INPUT_HELP = "Список доступных команд: \n \t - !priority – изменить приоритет \n \t - !time – изменить время выполнения задачи \n \t - !comment – добавить комментарий к задаче \n \t - !info – вся информация о задаче"
+COMMENT_ADDED_SUCCESSFULLY = "Комментарий успешно добавлен"
+COMMENT_ADDED_WITH_ERROR = "Ошибка при добавлении комментария"
+INPUT_ISSUE_COMMENT_ERROR = "Введите вместе с командой номер заявки и комментарий"

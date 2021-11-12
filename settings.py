@@ -14,4 +14,4 @@ class AppSettings(BaseSettings):
     TOKEN: str
 
     class Config:  # noqa: WPS431
-        env_file = ".env"
+        env_file = "env.txt"

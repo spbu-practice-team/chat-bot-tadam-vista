@@ -84,13 +84,20 @@ def update_time_end(room, args):
 @remove_first_argument
 def post_comment(room, args):
     if not args or len(args) == 1:
-        room.send_text(strings.INPUT_ISSUE_NAME_ERROR)
+        room.send_text(strings.INPUT_ISSUE_COMMENT_ERROR)
         return
 
     issue_name = args[0]
     new_comment = ' '.join(args[1:])
     comment = issue_manager.post_comment(issue_name, new_comment)
-    room.send_text("Ваш комментарий добавлен")
+    if comment is None:
+        room.send_text(strings.COMMENT_ADDED_WITH_ERROR)
+    else:
+        room.send_text(strings.COMMENT_ADDED_SUCCESSFULLY)
+        
+
+    
+    
    
 
 
