@@ -89,11 +89,17 @@ def post_comment(room, args):
 
     issue_name = args[0]
     new_comment = ' '.join(args[1:])
+    
     comment = issue_manager.post_comment(issue_name, new_comment)
     if comment is None:
-        room.send_text(strings.COMMENT_ADDED_WITH_ERROR)
+        text = strings.COMMENT_ADDED_WITH_ERROR
     else:
-        room.send_text(strings.COMMENT_ADDED_SUCCESSFULLY)
+        text = strings.COMMENT_ADDED_SUCCESSFULLY
+
+    room.send_text(text)
+    
+
+
         
 
     

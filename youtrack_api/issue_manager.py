@@ -129,15 +129,14 @@ class IssueManager:
 
  
     def post_comment(self, issue_name, comment):
-        url = f"{self.base_url}/{issue_name}/comments/{IssueManager.comment_id}"
+        url = f"{self.base_url}/{issue_name}/comments"
         headers = {'Authorization': f"Bearer {self.token}",
                    "Content-Type": "application/json"}
-        params = {'fields': 'comment(text)'}
+        params = {'fields': 'text'}
         data = {
-            "comment":{
-                "text": comment
-            }
-        }          
+            "text": comment
+        }
+                 
         data = json.dumps(data, indent=4)
         response = httpx.post(url, headers=headers, params=params, data=data)
         try:
@@ -146,26 +145,9 @@ class IssueManager:
             print(e)
             return None
         response_data = response.json()
-        name = response_data["comment"]["name"]
-        value = response_data["comment"]["text"] if ((response_data["comment"] is not None) and ("text" in response_data["comment"])) else None
+        name = response_data["text"]
+        value = response_data["text"]
         return FieldInfo(name=name, value=value)
-
-    def get_comment(self, issue_name):
-        url = f"{self.base_url}/{issue_name}/comments/{IssueManager.comment_id}"
-        headers = {'Authorization': f"Bearer {self.token}"}
-        params = {'fields': 'comments(field(name)),value(name)'}
-        response = httpx.get(url, headers=headers, params=params)
-        try:
-            response.raise_for_status()
-        except httpx.HTTPError as e:
-            print(e)
-            return None
-        response_data = response.json()
-        name = response_data["projectCustomField"]["field"]["name"]
-        value = response_data["comment"]["text"] if ((response_data["comment"] is not None) and ("text" in response_data["comment"])) else None
-        return FieldInfo(name=name, value=value)
-
-        
         
 
     
