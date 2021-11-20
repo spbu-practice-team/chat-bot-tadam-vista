@@ -98,19 +98,6 @@ def post_comment(room, args):
 
     room.send_text(text)
     
-
-
-        
-
-    
-    
-   
-
-
-
-
-
-
 def main():
     bot = MatrixBotAPI(config.SERVER, config.USERNAME, config.PASSWORD)
 

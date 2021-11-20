@@ -54,9 +54,6 @@ class IssueManager:
         value = response_data["value"]["presentation"] if ((response_data["value"] is not None) and ("presentation" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
 
-    
-
-
     def get_time_start(self, issue_name):
         url = f"{self.base_url}/{issue_name}"
         headers = {'Authorization': f"Bearer {self.token}"}
@@ -130,8 +127,10 @@ class IssueManager:
  
     def post_comment(self, issue_name, comment):
         url = f"{self.base_url}/{issue_name}/comments"
-        headers = {'Authorization': f"Bearer {self.token}",
-                   "Content-Type": "application/json"}
+        headers = {
+            'Authorization': f"Bearer {self.token}",
+            "Content-Type": "application/json"
+        }
         params = {'fields': 'text'}
         data = {
             "text": comment
@@ -148,9 +147,5 @@ class IssueManager:
         name = response_data["text"]
         value = response_data["text"]
         return FieldInfo(name=name, value=value)
-        
-
-    
-
 
 issue_manager = IssueManager(config.DOMAIN, config.TOKEN)
