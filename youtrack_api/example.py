@@ -21,3 +21,7 @@ x = GlebIssue.update_priority(Gleb_issue_name, "Critical")
 print(f"{x.name}: {x.value}")
 x = GlebIssue.update_time_end(Gleb_issue_name, "5н 7д 3ч 2м")
 print(f"{x.name}: {x.value}")
+
+## maksim examples
+x = GlebIssue.post_comment( Gleb_issue_name, "text")
+print(f"{x.name}: {x.value} \n")

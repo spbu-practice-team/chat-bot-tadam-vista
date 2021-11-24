@@ -11,6 +11,7 @@ class IssueManager:
     state_id = "111-2"
     priority_id = "111-0"
     time_end_id = "117-0"
+    comment_id = "4-2"
 
     def __init__(self, youtrack_domain, token):
         self.youtrack_domain = youtrack_domain
@@ -123,5 +124,28 @@ class IssueManager:
         value = response_data["value"]["presentation"] if ((response_data["value"] is not None) and ("presentation" in response_data["value"])) else None
         return FieldInfo(name=name, value=value)
 
+ 
+    def post_comment(self, issue_name, comment):
+        url = f"{self.base_url}/{issue_name}/comments"
+        headers = {
+            'Authorization': f"Bearer {self.token}",
+            "Content-Type": "application/json"
+        }
+        params = {'fields': 'text'}
+        data = {
+            "text": comment
+        }
+                 
+        data = json.dumps(data, indent=4)
+        response = httpx.post(url, headers=headers, params=params, data=data)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPError as e:
+            print(e)
+            return None
+        response_data = response.json()
+        name = response_data["text"]
+        value = response_data["text"]
+        return FieldInfo(name=name, value=value)
 
 issue_manager = IssueManager(config.DOMAIN, config.TOKEN)

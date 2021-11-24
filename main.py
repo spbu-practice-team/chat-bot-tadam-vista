@@ -38,6 +38,10 @@ def get_task_info(room, args):
 
     room.send_text(task_info)
 
+@remove_first_argument
+def get_help(room, args):
+    room.send_text(strings.INPUT_HELP)
+    return
 
 @remove_first_argument
 def update_priority(room, args):
@@ -77,7 +81,23 @@ def update_time_end(room, args):
     text = strings.SUCCESSFUL_UPDATE_PRIORITY.format(priority=end_datetime.value, issue_name=issue_name)
     room.send_text(text)
 
+@remove_first_argument
+def post_comment(room, args):
+    if not args or len(args) == 1:
+        room.send_text(strings.INPUT_ISSUE_COMMENT_ERROR)
+        return
 
+    issue_name = args[0]
+    new_comment = ' '.join(args[1:])
+    
+    comment = issue_manager.post_comment(issue_name, new_comment)
+    if comment is None:
+        text = strings.COMMENT_ADDED_WITH_ERROR
+    else:
+        text = strings.COMMENT_ADDED_SUCCESSFULLY
+
+    room.send_text(text)
+    
 def main():
     bot = MatrixBotAPI(config.SERVER, config.USERNAME, config.PASSWORD)
 
@@ -89,6 +109,15 @@ def main():
 
     update_end_datetime_handler = MCommandHandler("end_datetime", update_time_end)
     bot.add_handler(update_end_datetime_handler)
+
+    get_help_handler = MCommandHandler("help", get_help)
+    bot.add_handler(get_help_handler)
+
+    post_comment_handler = MCommandHandler("comment", post_comment)
+    bot.add_handler(post_comment_handler)
+
+    #get_comment_text_handler = MCommandHandler("", get_comment_text)
+    #bot.add_handler(get_comment_text_handler)
 
     bot.start_polling()
 
