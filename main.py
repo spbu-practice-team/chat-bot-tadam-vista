@@ -13,7 +13,7 @@ BotStats.create_table()
 def remove_first_argument(func):
     def the_wrapper(room, event):
         args = event['content']['body'].split()
-        add_stats(room.client.user_id, args[0])
+        add_stats(room.events.sender, args[0])
         args.pop(0)
         func(room, args)
     return the_wrapper
