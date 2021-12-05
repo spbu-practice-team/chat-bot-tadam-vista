@@ -4,13 +4,16 @@ from resources import strings
 from resources.regexp import datetime_exp
 from settings import AppSettings
 from youtrack_api.issue_manager import issue_manager
+from resources.db import *
 
 config = AppSettings()
 
+BotStats.create_table()
 
 def remove_first_argument(func):
     def the_wrapper(room, event):
         args = event['content']['body'].split()
+        add_stats(room.client.user_id, args[0])
         args.pop(0)
         func(room, args)
     return the_wrapper
@@ -78,6 +81,23 @@ def update_time_end(room, args):
     room.send_text(text)
 
 
+@remove_first_argument
+def _get_stats(room, args):
+    try:
+        text = strings.STATS_USERS
+        for stat in BotStats.select().group_by(BotStats.request, BotStats.client).order_by(BotStats.client,
+                                                                                           BotStats.count.desc()):
+            text += strings.STATS_USER.format(stat.client, stat.request, str(stat.count))
+        text += strings.STATS_REQUESTS
+        for stat in BotStats.select(BotStats.request, fn.SUM(BotStats.count)).group_by(BotStats.request).order_by(
+                BotStats.request):
+            text += strings.STATS_REQUEST.format(stat.request, str(stat.count))
+        room.send_text(text)
+        return
+    except:
+        room.send_text(strings.STATS_CHANGE_ERROR)
+
+
 def main():
     bot = MatrixBotAPI(config.SERVER, config.USERNAME, config.PASSWORD)
 
@@ -89,6 +109,9 @@ def main():
 
     update_end_datetime_handler = MCommandHandler("end_datetime", update_time_end)
     bot.add_handler(update_end_datetime_handler)
+
+    _get_stats_handler = MCommandHandler("stats", _get_stats, '#')
+    bot.add_handler(_get_stats_handler)
 
     bot.start_polling()
 
