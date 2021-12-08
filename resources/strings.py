@@ -42,6 +42,7 @@ INPUT_ISSUE_NAME_ERROR = "Введите вместе с командой ном
 INPUT_PRIORITY_AND_ISSUE_NAME_ERROR = f"Введите вместе с командой номер заявки или ключевые слова и новое значение приоритета из предложенных:\n{', '.join(POSSIBLE_PRIORITY)}"
 INPUT_END_DATETIME_AND_ISSUE_NAME_ERROR = f"Введите вместе с командой номер заявки или ключевые слова и новое значение оценочного времени выполнения задачи в формате \"1н 1д 1ч 1м\":"
 SUCCESSFUL_UPDATE_PRIORITY = "Приоритет {priority} для задачи {issue_name} установлен"
+SUCCESSFUL_UPDATE_DATETIME = "Временные затраты \"{time}\" для задачи {issue_name} установлены"
 INPUT_PRIORITY_ERROR = f"Введите приоритет из предложенных ниже:\n{', '.join(POSSIBLE_PRIORITY)}"
 INPUT_END_DATETIME_ERROR = f"Введите оценочное время выполнения задачи как написано ниже:\n{INPUT_DATETIME_FORMAT}"
 STATS_CHANGE_ERROR = "Ошибка при попытке вывести статистику\n"

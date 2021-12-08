@@ -87,7 +87,7 @@ def update_time_end(room, args):
 
     end_datetime = issue_manager.update_time_end(issue_name, new_end_time)
 
-    text = strings.SUCCESSFUL_UPDATE_PRIORITY.format(priority=end_datetime.value, issue_name=issue_name)
+    text = strings.SUCCESSFUL_UPDATE_DATETIME.format(time=end_datetime.value, issue_name=issue_name)
     room.send_text(text)
 
 
